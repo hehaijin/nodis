@@ -24,6 +24,7 @@ export class CacheService {
 		this.head = new CacheNode('head', undefined);
 		this.tail = new CacheNode('tail', undefined);
 		this.head.next = this.tail;
+		this.tail.pre = this.head;
 	}
 
 	updateNodePosition(key: string) {
@@ -71,7 +72,7 @@ export class CacheService {
 
 	handleDel(key: string): Result {
 		let node = this.cacheData.get(key);
-		if (node === undefined) return {};
+		if (node === undefined) return {error: `key ${key} does not exist`};
 		if (this.timers.has(key)) clearTimeout(this.timers.get(key));
 		this.timers.delete(key);
 		if (node.pre)
@@ -84,8 +85,8 @@ export class CacheService {
 	}
 
 	handleLExpire(key: string, time: string): Result {
-		if(!this.cacheData.has(key)){
-			return {error: `key ${key} does not exist`};
+		if (!this.cacheData.has(key)) {
+			return { error: `key ${key} does not exist` };
 		}
 		if (this.timers.has(key)) {
 			clearTimeout(this.timers.get(key));
