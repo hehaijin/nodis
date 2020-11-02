@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Socket.IO chat</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font: 13px Helvetica, Arial;
+		}
+
+		form {
+			background: #000;
+			padding: 3px;
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+		}
+
+		form input {
+			border: 0;
+			padding: 10px;
+			width: 90%;
+			margin-right: 0.5%;
+		}
+
+		button {
+			width: 9%;
+			background: rgb(130, 224, 255);
+			border: none;
+			padding: 10px;
+		}
+
+		#messages {
+			list-style-type: none;
+			margin-top: 40px;
+			padding: 0;
+		}
+
+		#messages li {
+			padding: 5px 10px;
+		}
+
+		#messages li:nth-child(odd) {
+			background: #eee;
+		}
+
+
+		.batch {
+			position: fixed;
+			top: 0px;
+		}
+
+		.clear {
+			margin-left: 300px;
+			top: 0px;
+			position: fixed;
+		}
+	</style>
+
+</head>
+
+<body>
+	<script src="/socket.io/socket.io.js"></script>
+
+	<ul id="messages"></ul>
+	<form action="">
+		<input id="m" autocomplete="off" /><button class="send">Send</button>
+	</form>
+	<button class="batch">batch test</button>
+	<button class="clear">clear</button>
+	<script>
+		var socket = io();
+		let input = document.querySelector('input');
+		let ul = document.querySelector('ul');
+		document.querySelector('.send').addEventListener('click', e => {
+			e.preventDefault(); // prevents page reloading
+
+			console.log(input.value);
+			socket.emit('command', input.value);
+			input.value = '';
+		});
+		document.querySelector('.batch').addEventListener('click', e => {
+			e.preventDefault(); // prevents page reloading
+
+			for (let i = 0; i < 150000; i++) {
+				if (i % 1000 === 0) console.log(i);
+				socket.emit('command', `set ${i} ${i}`)
+			}
+			for (let i = 0; i < 1000; i++) {
+				socket.emit('command', `get ${i}`)
+			}
+		});
+
+		document.querySelector('.clear').addEventListener('click', e => {
+			e.preventDefault(); // prevents page reloading
+			ul.innerHTML = '';
+		});
+		socket.on('result', (r) => {
+			/*
+			console.log(r);
+			let ele = document.createElement('li');
+			if (r.error) {
+				ele.textContent = r.error;
+				ele.style.color = 'red';
+			}
+			else ele.textContent = r.result;
+			ul.appendChild(ele);
+			*/
+		})
+	</script>
+</body>
+
+</html>
