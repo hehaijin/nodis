@@ -1,12 +1,21 @@
 #     A Redis like standalone caching service implemented in node.js
 
 
+### install and usage
+
+`npm install`
+
+`npm run prod`
+
+in browser, open localhost:3000 to connect. 
+
 ### connection
 The service will be accepting websocket connections from client.
 
 once connected, the client can issue Redis like commands to the service.
 
 when running, it also exposes a webpage that can be used for simple issuing commands for testing purpose.
+
 
 ### supported commands
 Currently the service supports commmands:
