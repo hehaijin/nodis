@@ -25,21 +25,21 @@ when running, it also exposes a webpage that can be used for simple issuing comm
 ### supported commands
 Currently the service supports commmands:
 
--set
+- set
 
--get
+- get
 
--expire
+- expire
 
--del
+- del
 
--lpush/rpush
+- lpush/rpush
 
--lindex
+- lindex
 
--lpop/rpop
+- lpop/rpop
 
--showcache:  show current status of cache for debugging purpose.
+- showcache:  show current status of cache for debugging purpose.
 
 ### caching functinalities
 expire:  implemented with javascript's buildin setTimeout function.
