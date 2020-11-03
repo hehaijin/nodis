@@ -48,8 +48,9 @@ least recently used(LRU) cache:  Needs a way to limit memory usage as caching mi
 
 
 ### performance
-the caching itself is very fast, while the bottle neck seems on the websocket. so in the current form, running multiple threads with cluster module (in appCluster.ts) does not help with performance.
+In appCluster.ts, I tried to increase performance by running multiple threads with nodejs cluster module. Each single thread will will have a portion of the whole cache data, based on hashcode of the key. Master process will serve as a load balancer, routing requests to invididual thread. However, it seems the performance bottle neck is not in individual threads, but may be in the websocket. it did not help with performance.
 
+one optimization I can think of now is create a special client, that can hold multiple connections to server. the client will then route different requests to different server threads based on key hashcode. 
 
 
 
