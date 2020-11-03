@@ -52,5 +52,6 @@ In appCluster.ts, I tried to increase performance by running multiple threads wi
 
 one optimization I can think of now is create a special client, that can hold multiple connections to server. the client will then route different requests to different server threads based on key hashcode. 
 
+It might also be faster to use messaging libraries like zeromq. 
 
 
