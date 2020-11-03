@@ -55,7 +55,7 @@ export class CacheService {
 			let node = new CacheNode(key, data);
 			this.cacheData.set(key, node);
 			this.updateNodePosition(key);
-			if (expire) this.handleLExpire(key, expire);
+			if (expire) return this.handleLExpire(key, expire);
 			return { result: 'OK' };
 		} catch (error) {
 			return { error };
@@ -72,7 +72,7 @@ export class CacheService {
 
 	handleDel(key: string): Result {
 		let node = this.cacheData.get(key);
-		if (node === undefined) return {error: `key ${key} does not exist`};
+		if (node === undefined) return { error: `key ${key} does not exist` };
 		if (this.timers.has(key)) clearTimeout(this.timers.get(key));
 		this.timers.delete(key);
 		if (node.pre)
@@ -81,24 +81,30 @@ export class CacheService {
 			node.next.pre = node.pre;
 		this.cacheData.delete(key);
 		return { result: 'OK' };
-
 	}
 
 	handleLExpire(key: string, time: string): Result {
-		if (!this.cacheData.has(key)) {
-			return { error: `key ${key} does not exist` };
+		try {
+			if (!this.cacheData.has(key)) {
+				return { error: `key ${key} does not exist` };
+			}
+			if (this.timers.has(key)) {
+				clearTimeout(this.timers.get(key));
+				this.timers.delete(key);
+			}
+			let num = parseInt(time);
+			if(isNaN(num)){
+				return {error: `${time} must be of number format`}; 
+			}
+			let timer: NodeJS.Timeout = setTimeout(() => {
+				this.handleDel(key);
+			}, num);
+			this.timers.set(key, timer);
+			let result = 'OK';
+			return { result };
+		} catch (error) {
+			return { error };
 		}
-		if (this.timers.has(key)) {
-			clearTimeout(this.timers.get(key));
-			this.timers.delete(key);
-		}
-		let num = parseInt(time);
-		let timer: NodeJS.Timeout = setTimeout(() => {
-			this.handleDel(key);
-		}, num);
-		this.timers.set(key, timer);
-		let result = 'OK';
-		return { result };
 	}
 
 	handlePush(key: string, data: string, dir: string): Result {

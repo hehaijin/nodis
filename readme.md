@@ -1,4 +1,4 @@
-#     A Redis like standalone caching service implemented in node.js
+#  A Redis like standalone caching service implemented in node.js
 
 
 ### install and usage
@@ -41,6 +41,9 @@ expire:  implemented with javascript's buildin setTimeout function.
 
 least recently used(LRU) cache:  Needs a way to limit memory usage as caching might grow too big and crash. Implemented with a linkedlist. for simplicity, it currently has a limit of key counts of 100000.
 
+
+### performance
+the caching itself is very fast, while the bottle neck seems on the websocket. so in the current form, running multiple threads with cluster module (in appCluster.ts) does not help with performance.
 
 
 

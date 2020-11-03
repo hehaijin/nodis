@@ -17,7 +17,6 @@ server.listen(3000, () => {
 let io = require('socket.io' ).listen(server);
 io.sockets.on('connection', function (socket: any) {
 	console.log('a user connected');
-
 	socket.on('command', (msg: any) => {
 		//console.log('command: ' + msg);
 		if (!msg) {
